@@ -41,9 +41,9 @@ def list_expense(start_date,end_date):
     with sqlite3.connect(DB_PATH) as c:
 
         cur = c.execute("""
-        SELECT id,date,amount,category,subcategorynote 
+        SELECT id,date,amount,category,subcategory,note 
         FROM expense Where ? between ?
-        ORDER BY id ASC""",(start_date,end_date))
+        ORDER BY id  """,(start_date,end_date))
 
         cols = [c[0] for c in cur.description]
         return [dict(zip(cols,r)) for r in cur.fetchall()]
