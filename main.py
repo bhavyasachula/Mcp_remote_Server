@@ -2,6 +2,9 @@ from fastmcp import FastMCP
 import os
 import sqlite3
 
+"""Database extension is needed as in path to perform the insert/update/delete so 
+    use  'databaseName.db' 
+"""
 DB_PATH = os.path.join(os.path.dirname(__file__),"Expense_db.db")
 
 '''Creating the Instance of Fastmcp'''
