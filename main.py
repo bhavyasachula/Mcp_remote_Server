@@ -2,7 +2,7 @@ from fastmcp import FastMCP
 import os
 import sqlite3
 
-DB_PATH = os.path.join(os.path.dirname(__file__),"Expense_db")
+DB_PATH = os.path.join(os.path.dirname(__file__),"Expense_db.db")
 
 '''Creating the Instance of Fastmcp'''
 mcp = FastMCP(name="Expense_Tracker");
