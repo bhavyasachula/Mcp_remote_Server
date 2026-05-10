@@ -20,33 +20,38 @@ def init_db():
                     category TEXT NOT NULL ,
                     subcategory TEXT DEFAULT '',
                     note TEXT DEFAULT '')""")
+        c.commit()
 
 init_db()
 
 @mcp.tool()
-def add_expense(date,amount,category,subcategory,note):
-    """Add expenses into the database. """
+def add_expense(date, amount, category, subcategory, note):
+    """Add expenses into the database."""
     with sqlite3.connect(DB_PATH) as c:
-        cur = c.execute("""INSERT INTO expense (date,amount,category,subcategory,note) VALUES (?,?,?,?,?)""",(date,amount,category,subcategory,note))
-
+        cur = c.execute(
+            """INSERT INTO expense (date, amount, category, subcategory, note) VALUES (?, ?, ?, ?, ?)""",
+            (date, amount, category, subcategory, note)
+        )
+        c.commit()
         return {
-            "status":"ok",
-            "Row id":cur.lastrowid
+            "status": "ok",
+            "row_id": cur.lastrowid
         }
 
 
 @mcp.tool()
-def list_expense(start_date,end_date):
-    """list all expenses from the database."""
+def list_expense(start_date, end_date):
+    """List all expenses from the database within an inclusive date range."""
     with sqlite3.connect(DB_PATH) as c:
-
         cur = c.execute("""
-        SELECT id,date,amount,category,subcategory,note 
-        FROM expense Where ? between ?
-        ORDER BY id  """,(start_date,end_date))
+        SELECT id, date, amount, category, subcategory, note
+        FROM expense
+        WHERE date BETWEEN ? AND ?
+        ORDER BY date, id
+        """, (start_date, end_date))
 
-        cols = [c[0] for c in cur.description]
-        return [dict(zip(cols,r)) for r in cur.fetchall()]
+        cols = [col[0] for col in cur.description]
+        return [dict(zip(cols, r)) for r in cur.fetchall()]
 
 
 @mcp.tool()
@@ -70,4 +75,4 @@ def summarize(start_date,end_date,category=None):
             return [dict(zip(cols,r)) for r in cur.fetchall()]
 
 if __name__ == "__main__":
-    mcp.run(transport="http" , host="0.0.0.0" ,port=8000)
+    mcp.run(transport="http", host="0.0.0.0" ,port=8000)
